@@ -1,46 +1,38 @@
-let delays = document.querySelector('[name="delay"]');
-let step = document.querySelector('[name="step"]');
-let amount = document.querySelector('[name="amount"]');
-let btn = document.querySelector('button');
+import Notiflix from 'notiflix';
+import { Notify } from 'notiflix/build/notiflix-notify-aio';
 
-let position = 10;
-let delay = 5000;
+document.querySelector('.form').addEventListener('submit', function (event) {
+  event.preventDefault();
 
-function handleDelay(event) {
-  delayValue = event.currentTarget.value;
-  return delayValue;
-}
+  const initialDelay = parseInt(event.target.delay.value);
+  const step = parseInt(event.target.step.value);
+  const amount = parseInt(event.target.amount.value);
 
-function handleStep(event) {
-  let stepValue = event.currentTarget.value;
-  console.log(stepValue);
-  return stepValue;
-}
-
-function handleAmount(event) {
-  amountValue = event.currentTarget.value;
-  console.log(amountValue);
-  return amountValue;
-}
+  for (let i = 1; i <= amount; i++) {
+    const delay = step * (i - 1) + initialDelay;
+    createPromise(i, delay)
+      .then(({ position, delay }) => {
+        Notiflix.Notify.success(
+          `✅ Fulfilled promise ${position} in ${delay}ms`
+        );
+      })
+      .catch(({ position, delay }) => {
+        Notiflix.Notify.failure(
+          `❌ Rejected promise ${position} in ${delay}ms`
+        );
+      });
+  }
+});
 
 function createPromise(position, delay) {
-  for (let i = 1; i <= position; i++) {
-    const shouldResolve = Math.random() > 0.3;
-    if (shouldResolve) {
-      console.log('Success! Value passed to resolve function');
-    } else {
-      console.log('Error! Error passed to reject function');
-    }
-  }
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      const shouldResolve = Math.random() > 0.3;
+      if (shouldResolve) {
+        resolve({ position, delay });
+      } else {
+        reject({ position, delay });
+      }
+    }, delay);
+  });
 }
-
-function handleSubmit(event) {
-  event.preventDefault();
-  amount.addEventListener('input', handleAmount);
-  delays.addEventListener('input', handleDelay);
-  step.addEventListener('input', handleStep);
-
-  createPromise(position, delay);
-}
-
-btn.addEventListener('click', handleSubmit);
