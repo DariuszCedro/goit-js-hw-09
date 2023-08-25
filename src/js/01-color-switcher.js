@@ -17,8 +17,6 @@ function isActive() {
   startBtn.setAttribute('disabled', true);
   stopBtn.classList.remove('.is-active');
   stopBtn.removeAttribute('disabled');
-  console.log(startBtn);
-  console.log(stopBtn);
 }
 
 function isNotActive() {
@@ -27,8 +25,6 @@ function isNotActive() {
   startBtn.classList.remove('.is-active');
   startBtn.removeAttribute('disabled');
   clearInterval(timer);
-  console.log(startBtn);
-  console.log(stopBtn);
 }
 
 startBtn.addEventListener('click', setColor);
