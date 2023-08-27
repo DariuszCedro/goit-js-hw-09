@@ -6,6 +6,7 @@ const timeH = document.querySelector('span[data-hours]');
 const timeM = document.querySelector('span[data-minutes]');
 const timeS = document.querySelector('span[data-seconds]');
 let today = new Date();
+let timer = null;
 
 function convertMs(ms) {
   const second = 1000;
@@ -37,9 +38,15 @@ const options = {
       btn.removeAttribute('disabled');
 
       function setTime() {
+        btn.setAttribute('disabled', true);
         timer = setInterval(function () {
           today = new Date();
           let count = selectedDates[0] - today;
+
+          if (count <= 0) {
+            clearInterval(timer);
+          }
+
           const times = convertMs(count);
           if (count >= 0) {
             let sec = times.seconds.toString();
